@@ -209,17 +209,18 @@ The section auto-hides when there's no approval on the record.
 
 ### 5. Create an approval flow
 
-Navigate to the **Approvals > Approval Flows** resource in your Filament panel. Create a flow with one or more steps:
+Navigate to the **Approvals > Approval Flows** resource in your Filament panel. Create a flow with:
 
 - **Name** -- e.g. "Purchase Order Approval"
-- **Model Class** -- optional, e.g. `App\Models\PurchaseOrder` (leave blank for any model)
+- **Applies To** -- dropdown auto-populated with models that use `HasApprovals` and are registered as resources in the current panel. Leave blank to apply to any model.
 - **Steps** -- ordered list with:
   - Step name
   - Type: Single / Sequential / Parallel
-  - Approver type: Specific Users / Users by Role / Custom Callback
-  - Required approvals (for parallel steps)
+  - Approver type: dropdown of resolvers configured on the plugin (e.g. Specific Users, Users by Role, or your custom resolvers)
+  - Approver config: dynamic fields based on the selected resolver (user picker, role selector, etc.)
+  - Required approvals (visible for Parallel type, with "Require N of M" hint)
   - SLA hours (optional)
-  - Escalation action (when SLA is breached)
+  - Escalation action (visible when SLA is set)
 
 ## Approval Flow Types
 
