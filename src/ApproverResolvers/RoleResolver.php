@@ -21,8 +21,12 @@ class RoleResolver implements ApproverResolver
 
         $query = $userModel::role($roleName);
 
-        if (isset($approvable->company_id) && config('filament-approval.scope_approvers_to_company', true)) {
-            $query->where('company_id', $approvable->company_id);
+        if (config('filament-approval.multi_tenancy.enabled', false) && config('filament-approval.multi_tenancy.scope_approvers', true)) {
+            $column = config('filament-approval.multi_tenancy.column', 'company_id');
+
+            if (isset($approvable->{$column})) {
+                $query->where($column, $approvable->{$column});
+            }
         }
 
         return $query->pluck('id')->all();

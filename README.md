@@ -251,7 +251,7 @@ Config: Select users from the dropdown
 
 ### RoleResolver
 
-Assigns all users with a given Spatie role. Optionally scoped to the approvable model's `company_id`:
+Assigns all users with a given Spatie role. When multi-tenancy is enabled, approvers are scoped to the approvable model's tenant:
 
 ```
 Approver Type: Users by Role
@@ -606,6 +606,24 @@ $engine->delegate($stepInstance, $fromUserId, $toUserId, 'On vacation');
 $engine->cancel($approval);
 ```
 
+## Multi-Tenancy
+
+Multi-tenancy is **disabled by default**. When enabled, approval flows are scoped per tenant and the tenant column is added to the `approval_flows` migration.
+
+Enable it in `config/filament-approval.php`:
+
+```php
+'multi_tenancy' => [
+    'enabled' => true,
+    'column' => 'company_id', // or 'team_id', 'organization_id', etc.
+    'scope_approvers' => true, // scope role-based resolvers to the tenant
+],
+```
+
+When `scope_approvers` is `true`, the `RoleResolver` will only return users that share the same tenant as the approvable model.
+
+> **Important:** Configure multi-tenancy **before** running migrations. The tenant column is only added to the `approval_flows` table when `multi_tenancy.enabled` is `true`.
+
 ## Configuration
 
 ```php
@@ -620,7 +638,12 @@ return [
         \Wezlo\FilamentApproval\ApproverResolvers\CallbackResolver::class,
     ],
 
-    'scope_approvers_to_company' => true,
+    'multi_tenancy' => [
+        'enabled' => false,
+        'column' => 'company_id',
+        'scope_approvers' => true,
+    ],
+
     'sla_warning_threshold' => 0.75,    // 75% of SLA time
     'schedule_sla_command' => true,
     'navigation_group' => 'Approvals',

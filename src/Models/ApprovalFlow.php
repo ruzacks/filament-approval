@@ -33,12 +33,18 @@ class ApprovalFlow extends Model
 
     public function scopeForModel(Builder $query, Model $model): Builder
     {
-        return $query
+        $query
             ->where('is_active', true)
             ->where(function (Builder $q) use ($model) {
                 $q->where('approvable_type', $model->getMorphClass())
                     ->orWhereNull('approvable_type');
-            })
-            ->when($model->company_id ?? null, fn ($q, $id) => $q->where('company_id', $id));
+            });
+
+        if (config('filament-approval.multi_tenancy.enabled', false)) {
+            $column = config('filament-approval.multi_tenancy.column', 'company_id');
+            $query->when($model->{$column} ?? null, fn ($q, $id) => $q->where($column, $id));
+        }
+
+        return $query;
     }
 }

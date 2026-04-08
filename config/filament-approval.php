@@ -28,11 +28,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Scope Approvers to Company
+    | Multi-Tenancy
     |--------------------------------------------------------------------------
-    | When true, role-based resolvers will scope to the approvable's company_id.
+    | Enable multi-tenancy to scope approval flows and approvers per tenant.
+    | When enabled, the tenant_column is used on the approval_flows table
+    | and on models/users to isolate approvals per tenant.
+    |
+    | Set column to match your application's tenant foreign key
+    | (e.g. 'company_id', 'team_id', 'organization_id').
+    |
+    | scope_approvers: When true, role-based resolvers will also filter
+    | users by the tenant column.
     */
-    'scope_approvers_to_company' => true,
+    'multi_tenancy' => [
+        'enabled' => false,
+        'column' => 'company_id',
+        'scope_approvers' => true,
+    ],
 
     /*
     |--------------------------------------------------------------------------

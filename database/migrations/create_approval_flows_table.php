@@ -8,18 +8,29 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('approval_flows', function (Blueprint $table) {
+        $tenancyEnabled = config('filament-approval.multi_tenancy.enabled', false);
+        $tenantColumn = config('filament-approval.multi_tenancy.column', 'company_id');
+
+        Schema::create('approval_flows', function (Blueprint $table) use ($tenancyEnabled, $tenantColumn) {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('approvable_type')->nullable();
-            $table->foreignId('company_id')->nullable()->constrained()->cascadeOnDelete();
+
+            if ($tenancyEnabled) {
+                $table->unsignedBigInteger($tenantColumn)->nullable()->index();
+            }
+
             $table->boolean('is_active')->default(true);
             $table->json('metadata')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['approvable_type', 'company_id', 'is_active']);
+            if ($tenancyEnabled) {
+                $table->index(['approvable_type', $tenantColumn, 'is_active']);
+            } else {
+                $table->index(['approvable_type', 'is_active']);
+            }
         });
     }
 
