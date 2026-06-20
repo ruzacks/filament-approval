@@ -18,7 +18,7 @@ class ApprovalRequestedNotification
             return;
         }
 
-        $approvable = $approval->approvable;
+        $approvable = $stepInstance->approval->approvable;
         $modelLabel = class_basename($approvable);
 
         $record = $approval->approvable;
