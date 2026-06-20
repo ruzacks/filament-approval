@@ -6,6 +6,8 @@ use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Wezlo\FilamentApproval\FilamentApprovalPlugin;
 use Wezlo\FilamentApproval\Models\ApprovalStepInstance;
+use Filament\Actions\Action;
+use Filament\Facades\Filament;
 
 class ApprovalRequestedNotification
 {
@@ -21,7 +23,7 @@ class ApprovalRequestedNotification
         $approvable = $stepInstance->approval->approvable;
         $modelLabel = class_basename($approvable);
 
-        $record = $approval->approvable;
+        $record = $approvable;
         $resource = Filament::getModelResource(
             $record::class
         );
