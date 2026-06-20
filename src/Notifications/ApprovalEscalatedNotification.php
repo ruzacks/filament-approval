@@ -6,6 +6,8 @@ use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Wezlo\FilamentApproval\FilamentApprovalPlugin;
 use Wezlo\FilamentApproval\Models\ApprovalStepInstance;
+use Filament\Actions\Action;
+use Filament\Facades\Filament;
 
 class ApprovalEscalatedNotification
 {
@@ -18,13 +20,36 @@ class ApprovalEscalatedNotification
             return;
         }
 
-        $approvable = $stepInstance->approval->approvable;
+        $approvable = $approval->approvable;
         $modelLabel = class_basename($approvable);
+
+        $record = $approval->approvable;
+        $resource = Filament::getModelResource(
+            $record::class
+        );
+
+        $docNumber = $approvable->getKey();
+        if ($modelLabel === "FundRequest") {
+            $modelLabel = "Permintaan Pengeluaran Dana";
+            $docNumber = $approvable->document_number;
+        } else if ($modelLabel === "GeneratedDocument") {
+            $modelLabel = "Permintaan Pengeluaran Dana";
+            $docNumber = $approvable->title;
+        }
 
         Notification::make()
             ->title(__('filament-approval::approval.notifications.escalated_title'))
-            ->body(__('filament-approval::approval.notifications.escalated_body', ['model' => $modelLabel, 'id' => $approvable->getKey()]))
+            ->body(__('filament-approval::approval.notifications.escalated_body', ['model' => $modelLabel, 'id' => $docNumber]))
             ->icon(Heroicon::OutlinedExclamationTriangle)
+            ->actions([
+                Action::make('view')
+                    ->label('Lihat')
+                    ->url(
+                        $resource::getUrl('view', [
+                            'record' => $record
+                        ])
+                    )
+            ])
             ->danger()
             ->sendToDatabase($recipient);
     }
