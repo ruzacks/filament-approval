@@ -135,15 +135,15 @@ class ApprovalFlowResource extends Resource
                                 return __('filament-approval::approval.flow.required_approvals_helper');
                             })
                             ->live(),
-                        TextInput::make('sla_hours')
-                            ->numeric()
-                            ->label(__('filament-approval::approval.flow.sla_hours'))
-                            ->helperText(__('filament-approval::approval.flow.sla_helper'))
-                            ->live(),
-                        Select::make('escalation_action')
-                            ->label(__('filament-approval::approval.flow.escalation_action'))
-                            ->options(EscalationAction::class)
-                            ->visible(fn (Get $get): bool => filled($get('sla_hours'))),
+                        // TextInput::make('sla_hours')
+                        //     ->numeric()
+                        //     ->label(__('filament-approval::approval.flow.sla_hours'))
+                        //     ->helperText(__('filament-approval::approval.flow.sla_helper'))
+                        //     ->live(),
+                        // Select::make('escalation_action')
+                        //     ->label(__('filament-approval::approval.flow.escalation_action'))
+                        //     ->options(EscalationAction::class)
+                        //     ->visible(fn (Get $get): bool => filled($get('sla_hours'))),
                     ])
                     ->columns(2)
                     ->reorderable()
