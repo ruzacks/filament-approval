@@ -201,7 +201,7 @@ class ApprovalEngine
         $step = $nextStep->step;
 
         if ($step->sla_hours) {
-            $slaDeadline = now()->addHours($step->sla_hours);
+            $slaDeadline = now()->addMinutes($step->sla_hours);
         }
 
         $nextStep->update([

@@ -117,7 +117,7 @@ class ProcessApprovalSlaCommand extends Command
             'sla_breached' => false,
             'sla_warning_sent' => false,
             'sla_deadline' => $instance->step->sla_hours
-                ? now()->addHours($instance->step->sla_hours)
+                ? now()->addMinutes($instance->step->sla_hours)
                 : null,
         ]);
 

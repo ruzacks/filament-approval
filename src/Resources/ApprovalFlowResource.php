@@ -223,11 +223,20 @@ class ApprovalFlowResource extends Resource
     {
         $models = [];
 
+        $translations = [
+            'FundRequest' => 'Permintaan Dana',
+            'GeneratedDocument' => 'Dokumen Pengajuan',
+            'Disbursement' => 'Pengeluaran Kas',
+        ];
+
         foreach (Filament::getCurrentOrDefaultPanel()->getResources() as $resource) {
             $modelClass = $resource::getModel();
 
             if (in_array(HasApprovals::class, class_uses_recursive($modelClass))) {
-                $models[$modelClass] = $resource::getModelLabel();
+
+                $label = $resource::getModelLabel();
+
+                $models[$modelClass] = $translations[$label] ?? $label;
             }
         }
 
