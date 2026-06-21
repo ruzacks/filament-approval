@@ -33,7 +33,7 @@ class ApprovalRequestedNotification
             $modelLabel = "Permintaan Pengeluaran Dana";
             $docNumber = $approvable->document_number;
         } else if ($modelLabel === "GeneratedDocument") {
-            $modelLabel = "Permintaan Pengeluaran Dana";
+            $modelLabel = "Permintaan Approval";
             $docNumber = $approvable->title;
         }
 
